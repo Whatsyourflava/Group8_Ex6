@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>FORM VALIDATION USING AJAX</title>
+</head>
+<body>
+
+    <video autoplay muted loop id="backgroundVideo">
+        <source src="1.mp4" type="video/mp4"> <!-- Include the type attribute -->
+        Your browser does not support the video tag.
+    </video>
+
+    <form id="VALIDATION" action="validation.php" method="POST">
+        <label id="validate">FORM VALIDATION</label>
+        <br>
+        <input type="text" name="username" placeholder="Username" required>
+        <br>
+        <input type="email" name="email" placeholder="E-mail" required>
+        <br>
+        <input type="password" name="password" placeholder="Password" required>
+        <br>
+        <select name="gender" id="gender">
+          <option value="">Gender</option>  
+          <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Dima">Dima</option>
+        </select>
+        <br>
+        <button type="submit" value="submit">Submit</button>
+        <br>
+        <div id="message"></div> 
+    </form>
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+      $(document).ready(function() {
+          $('#VALIDATION').submit(function(e) {
+              e.preventDefault(); 
+                    
+              //AJAX
+              $.ajax({
+                  url: 'validation.php', 
+                  type: 'POST',
+                  data: $(this).serialize(), 
+                  dataType: 'json', 
+                  success: function(response) {
+                      if (response.status === 'error') {
+                          let errorMessage = '<p style="color:red;">Validation Unsuccessful. Please try again.</p>';
+                          response.messages.forEach(function(message) {
+                              errorMessage += '<p style="color:red;">' + message + '</p>';
+                          });
+                          $('#message').html(errorMessage); 
+                      } else if (response.status === 'success') {
+                          window.location.href = 'dashboard.php'; 
+                      }
+                  }
+              });
+          });
+      });
+  </script>
+
+</body>
+</html>
